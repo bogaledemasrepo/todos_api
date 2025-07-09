@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,22 +27,22 @@ public class TodoServiceController {
 
     static {
         Todo todo1 = new Todo();
-        todo1.setId(Math.round(Math.random() * 1000000));
+        todo1.setId((Math.round(Math.random() * 1000000)));
         todo1.setTitle("Todo 1");
         todo1.setDiscription("Todo 1 discription!");
-        todos.put(todo1.getTitle(), todo1);
+        todos.put("" + (todo1.getId()) + "", todo1);
 
         Todo todo2 = new Todo();
         todo2.setId(Math.round(Math.random() * 1000000));
         todo2.setTitle("Todo 2");
         todo2.setDiscription("Todo 2 discription!");
-        todos.put(todo2.getTitle(), todo2);
+        todos.put("" + todo2.getId() + "", todo2);
 
         Todo todo3 = new Todo();
         todo3.setId(Math.round(Math.random() * 1000000));
         todo3.setTitle("Todo 3");
         todo3.setDiscription("Todo 3 discription!");
-        todos.put(todo3.getTitle(), todo3);
+        todos.put("" + todo3.getId() + "", todo3);
     }
 
     // Getting all todo
@@ -56,13 +57,24 @@ public class TodoServiceController {
         return ResponseEntity.ok(todos.values().stream().filter(todo -> todo.getId() == todoId).findFirst());
     }
 
-    //
+    // Adding todo to todo list
     @PostMapping
     public ResponseEntity<Object> createTodo(@RequestBody Todo todo) {
         todo.setId(Math.round(Math.random() * 1000000));
         todos.put(todo.getTitle(), todo);
         return new ResponseEntity<>("Todo is created successfully",
                 HttpStatus.CREATED);
+    }
+
+    // Update a todo
+    @PutMapping("/{todoId}")
+    public ResponseEntity<String> updateTodo(@PathVariable long todoId, @RequestBody Todo data) {
+        Todo updatedTodo = new Todo();
+        updatedTodo.setId(todoId);
+        updatedTodo.setTitle(data.getTitle());
+        updatedTodo.setDiscription(data.getDiscription());
+        todos.replace("" + todoId + "", updatedTodo);
+        return ResponseEntity.ok("Todo successfully updated!");
     }
 
 }
