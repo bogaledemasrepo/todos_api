@@ -1,5 +1,7 @@
 package todo.model;
 
+import java.time.LocalDateTime;
+
 public class Todo {
     private long id;
     private String title;
@@ -27,6 +29,11 @@ public class Todo {
 
     public void setDiscription(String discription) {
         this.discription = discription;
+    }
+
+    public void setId(LocalDateTime now) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setId'");
     }
 
 }
