@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import todo.exception.TodoNotFoundException;
 import todo.model.Todo;
 
 @RestController
@@ -52,8 +53,7 @@ public class TodoServiceController {
         var result = todos.values();
         // Check if todos exist
         if (result.isEmpty()) {
-            return ResponseEntity.notFound().build();
-
+            throw new TodoNotFoundException();
         }
         return ResponseEntity.ok(result);
     }
@@ -64,7 +64,7 @@ public class TodoServiceController {
         // Check if todo exists by id
         var todo = todos.values().stream().filter(td -> td.getId() == todoId).findFirst();
         if (todo.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new TodoNotFoundException();
 
         }
         return ResponseEntity.ok(todo);
@@ -85,7 +85,7 @@ public class TodoServiceController {
         // Check if todo exists by id
         var todo = todos.values().stream().filter(td -> td.getId() == todoId).findFirst();
         if (todo.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new TodoNotFoundException();
 
         }
         Todo updatedTodo = new Todo();
@@ -102,7 +102,7 @@ public class TodoServiceController {
         // Check if todo exists by id
         var todo = todos.values().stream().filter(td -> td.getId() == todoId).findFirst();
         if (todo.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new TodoNotFoundException();
 
         }
         todos.remove("" + todoId + "");
