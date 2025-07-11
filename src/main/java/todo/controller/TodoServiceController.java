@@ -49,13 +49,25 @@ public class TodoServiceController {
     // Getting all todo
     @GetMapping
     public ResponseEntity<Collection<Todo>> getTodos() {
-        return ResponseEntity.ok(todos.values());
+        var result = todos.values();
+        // Check if todos exist
+        if (result.isEmpty()) {
+            return ResponseEntity.notFound().build();
+
+        }
+        return ResponseEntity.ok(result);
     }
 
     // Getting single todo detail
     @GetMapping("/{todoId}")
     public ResponseEntity<Optional<Todo>> getTodo(@PathVariable long todoId) {
-        return ResponseEntity.ok(todos.values().stream().filter(todo -> todo.getId() == todoId).findFirst());
+        // Check if todo exists by id
+        var todo = todos.values().stream().filter(td -> td.getId() == todoId).findFirst();
+        if (todo.isEmpty()) {
+            return ResponseEntity.notFound().build();
+
+        }
+        return ResponseEntity.ok(todo);
     }
 
     // Adding todo to todo list
@@ -70,6 +82,12 @@ public class TodoServiceController {
     // Update a todo
     @PutMapping("/{todoId}")
     public ResponseEntity<String> updateTodo(@PathVariable long todoId, @RequestBody Todo data) {
+        // Check if todo exists by id
+        var todo = todos.values().stream().filter(td -> td.getId() == todoId).findFirst();
+        if (todo.isEmpty()) {
+            return ResponseEntity.notFound().build();
+
+        }
         Todo updatedTodo = new Todo();
         updatedTodo.setId(todoId);
         updatedTodo.setTitle(data.getTitle());
@@ -81,8 +99,14 @@ public class TodoServiceController {
 
     @DeleteMapping("/{todoId}")
     public ResponseEntity<String> deleteTodo(@PathVariable long todoId) {
+        // Check if todo exists by id
+        var todo = todos.values().stream().filter(td -> td.getId() == todoId).findFirst();
+        if (todo.isEmpty()) {
+            return ResponseEntity.notFound().build();
+
+        }
         todos.remove("" + todoId + "");
-        return ResponseEntity.ok("Todo deleted successfully!");
+        return ResponseEntity.noContent().build();
     }
 
 }
