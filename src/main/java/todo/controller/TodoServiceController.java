@@ -1,9 +1,6 @@
 package todo.controller;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -17,52 +14,34 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.AllArgsConstructor;
+import todo.dto.TodoAddRequest;
 import todo.exception.TodoNotFoundException;
 import todo.model.Todo;
+import todo.repository.TodosRepository;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("todos")
 public class TodoServiceController {
-    ArrayList<String> name = new ArrayList<String>();
-
-    public static Map<String, Todo> todos = new HashMap<>();
-
-    static {
-        Todo todo1 = new Todo();
-        todo1.setId((Math.round(Math.random() * 1000000)));
-        todo1.setTitle("Todo 1");
-        todo1.setDiscription("Todo 1 discription!");
-        todos.put("" + (todo1.getId()) + "", todo1);
-
-        Todo todo2 = new Todo();
-        todo2.setId(Math.round(Math.random() * 1000000));
-        todo2.setTitle("Todo 2");
-        todo2.setDiscription("Todo 2 discription!");
-        todos.put("" + todo2.getId() + "", todo2);
-
-        Todo todo3 = new Todo();
-        todo3.setId(Math.round(Math.random() * 1000000));
-        todo3.setTitle("Todo 3");
-        todo3.setDiscription("Todo 3 discription!");
-        todos.put("" + todo3.getId() + "", todo3);
-    }
+    private final TodosRepository todosRepository;
 
     // Getting all todo
     @GetMapping
-    public ResponseEntity<Collection<Todo>> getTodos() {
-        var result = todos.values();
+    public ResponseEntity<List<Todo>> getTodos() {
+        var todos = todosRepository.findAll();
         // Check if todos exist
-        if (result.isEmpty()) {
+        if (todos.isEmpty()) {
             throw new TodoNotFoundException();
         }
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(todos);
     }
 
     // Getting single todo detail
     @GetMapping("/{todoId}")
     public ResponseEntity<Optional<Todo>> getTodo(@PathVariable long todoId) {
         // Check if todo exists by id
-        var todo = todos.values().stream().filter(td -> td.getId() == todoId).findFirst();
+        var todo = todosRepository.findById(todoId);
         if (todo.isEmpty()) {
             throw new TodoNotFoundException();
 
@@ -73,39 +52,50 @@ public class TodoServiceController {
     // Adding todo to todo list
     @PostMapping
     public ResponseEntity<Object> createTodo(@RequestBody Todo todo) {
-        todo.setId(Math.round(Math.random() * 1000000));
-        todos.put(todo.getTitle(), todo);
+        todosRepository.save(todo);
         return new ResponseEntity<>("Todo is created successfully",
                 HttpStatus.CREATED);
     }
 
     // Update a todo
     @PutMapping("/{todoId}")
-    public ResponseEntity<String> updateTodo(@PathVariable long todoId, @RequestBody Todo data) {
+    public ResponseEntity<Optional<Todo>> updateTodo(@PathVariable long todoId, @RequestBody Todo data) {
         // Check if todo exists by id
-        var todo = todos.values().stream().filter(td -> td.getId() == todoId).findFirst();
+        Optional<Todo> todo = todosRepository.findById(todoId);
         if (todo.isEmpty()) {
             throw new TodoNotFoundException();
 
         }
-        Todo updatedTodo = new Todo();
-        updatedTodo.setId(todoId);
-        updatedTodo.setTitle(data.getTitle());
-        updatedTodo.setDiscription(data.getDiscription());
-        todos.replace("" + todoId + "", updatedTodo);
-        return ResponseEntity.ok("Todo successfully updated!");
+        var updateTodo = new Todo();
+        updateTodo.setId(todoId);
+        if (data.getTitle() != null) {
+            updateTodo.setTitle(data.getTitle());
+        } else
+            updateTodo.setTitle(todo.get().getTitle());
+        if (data.getDiscription() != null) {
+            updateTodo.setDiscription(data.getDiscription());
+        } else
+            updateTodo.setTitle(todo.get().getDiscription());
+
+        // data.setId(todoId);
+        // todo.get().setTitle(data.getTitle());
+        // todo.get().setDiscription(data.getDiscription());
+        todosRepository.save(updateTodo);
+
+        return ResponseEntity.ok(todo);
     }
+
     // Delete todo
 
     @DeleteMapping("/{todoId}")
     public ResponseEntity<String> deleteTodo(@PathVariable long todoId) {
         // Check if todo exists by id
-        var todo = todos.values().stream().filter(td -> td.getId() == todoId).findFirst();
+        var todo = todosRepository.findById(todoId);
         if (todo.isEmpty()) {
             throw new TodoNotFoundException();
 
         }
-        todos.remove("" + todoId + "");
+        todosRepository.deleteById(todoId);
         return ResponseEntity.noContent().build();
     }
 
