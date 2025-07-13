@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
-import todo.dto.TodoAddRequest;
 import todo.exception.TodoNotFoundException;
 import todo.model.Todo;
 import todo.repository.TodosRepository;
 
+@CrossOrigin(origins = "*")
 @AllArgsConstructor
 @RestController
 @RequestMapping("todos")
@@ -52,6 +53,7 @@ public class TodoServiceController {
     // Adding todo to todo list
     @PostMapping
     public ResponseEntity<Object> createTodo(@RequestBody Todo todo) {
+        System.out.println(todo.toString());
         todosRepository.save(todo);
         return new ResponseEntity<>("Todo is created successfully",
                 HttpStatus.CREATED);
@@ -77,9 +79,6 @@ public class TodoServiceController {
         } else
             updateTodo.setTitle(todo.get().getDiscription());
 
-        // data.setId(todoId);
-        // todo.get().setTitle(data.getTitle());
-        // todo.get().setDiscription(data.getDiscription());
         todosRepository.save(updateTodo);
 
         return ResponseEntity.ok(todo);

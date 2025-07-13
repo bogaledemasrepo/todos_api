@@ -4,8 +4,47 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>Hallo world!</h1>
+    <div class="modal hidden">
+      <div class="todo-add-form">
+        <button id="closeModal">x</button>
+        <form action="" id="todo-form">
+          <h1>New Todo</h1>
+          <div class="form-component">
+            <p>Title</p>
+            <input class="input" type="text" name="title" id="" required />
+          </div>
+
+          <div class="form-component">
+            <p>Discription</p>
+            <textarea
+              class="input"
+              name="discription"
+              id=""
+              required
+            ></textarea>
+          </div>
+
+          <button class="todo-add-btn" type="submit">Add todo</button>
+        </form>
+      </div>
+    </div>
+    <div class="container">
+      <div class="todo-header">
+        <p class="title">Wellcome to Todos application!</p>
+      </div>
+
+      <div class="todo-body">
+        <div class="b-header">
+          <p class="title">Todo list!</p>
+          <button class="btn-icon" id="openModal">+</button>
+        </div>
+        <hr />
+        <div class="" id="todolist"></div>
+      </div>
+    </div>
+    <script src="script.js"></script>
   </body>
 </html>
