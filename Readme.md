@@ -9,4 +9,4 @@ or use postman & check
 Get: http://localhost:4000/todos
 Post: http://localhost:4000/todos {title:your title,discription:your discription}
 Put: http://localhost:4000/todos/${todoId} {title:new your title,discription:new your discription}
-        Put: http://localhost:4000/todos/${todoId}
+        Delete: http://localhost:4000/todos/${todoId}
