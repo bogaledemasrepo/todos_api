@@ -22,7 +22,7 @@ body{
     padding-top: 10%;
     
 }
-.todo-add-form{
+.modal-content{
     position: relative;
     padding: 8px;
     border-radius: 4px;
@@ -76,26 +76,25 @@ form{
     justify-content: space-between;
 }
 .btn-icon{
-    padding: 8px;
-    border-radius: 6px;
-    background: #856868;
+    padding: 4px 8px;
+    border-radius: 4px;
     cursor: pointer;
     color: #ffc6c6;
-    font-weight: 600;
-    transition: all 300 ease-in-out;
 }
 .btn:active{
  outline: 2px solid blue;   
-}
-.btn:hover{
-    background: #534141;
 }
 
 #closeModal{
     position: absolute;
     right: 10px;
     top: 10px;
-    padding: 8px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+#openModal{
+       padding: 4px 8px;
+       cursor: pointer; 
 }
 .todo-add-btn{
     padding: 8px;
@@ -125,10 +124,41 @@ form{
     border: #856868;
     border-radius: 4px;
     cursor: pointer;
+    font-weight: 600;
+    color: #e0e0e0;
 }
 .item-header .btn-red{
     background: #c43f3f;
 }
 .item-header .btn-blue{
     background: #3f53c4;
+}
+.delModal{
+    margin: 8px;
+}
+.confirm-btn{
+    padding: 8px;
+    background: #c43f3f;
+    color: #f9fbfd;
+    font-weight: 600;
+    outline: none;
+    border-radius: 4px;
+    box-shadow: none;
+    margin-top: 8px;
+    width: 100%;
+    cursor: pointer;
+}
+.todo-title{
+    font-weight: bold;
+    color: #534141;
+    text-decoration: underline;
+}
+.todo-disription{
+    color: #534141;
+}
+.not-found{
+    padding: 8px;
+    font-weight: bold;
+    color: #534141;
+    text-align: center;
 }

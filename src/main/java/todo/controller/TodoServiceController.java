@@ -53,7 +53,6 @@ public class TodoServiceController {
     // Adding todo to todo list
     @PostMapping
     public ResponseEntity<Object> createTodo(@RequestBody Todo todo) {
-        System.out.println(todo.toString());
         todosRepository.save(todo);
         return new ResponseEntity<>("Todo is created successfully",
                 HttpStatus.CREATED);
